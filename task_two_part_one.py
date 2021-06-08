@@ -29,9 +29,34 @@ def stat_part_one(df):
 	return output_df
 
 
+def stat_part_two(df):
+	output = []
+	for user in pd.unique(df["tabnum"]):
+		df_user = df[df["tabnum"] == user]
+		first_work_event = True
+		busy_events, work_events = (0,0)
+		for i in df_user.index:
+			if (df_user['category'][i] == "lifestyle"):
+				continue
+			if(first_work_event):
+				first_work_event = False
+			else:
+				work_events += 1
+				if(df_user['category'][i-1] != "lifestyle"):   
+					busy_events += 1
+
+		if(work_events != 0):
+			output.append(busy_events/work_events)
+		else:
+			output.append(-1)
+	return output
+
 
 
 if __name__ == '__main__':
 	df = pd.read_excel("test_case_my.xlsx")
-	out = stat_part_one(df)
-	print(out.head())
+	out1 = stat_part_one(df)
+	print(out1.head())
+	out2 = stat_part_two(df)
+	out1['2'] = out2
+	print(out1.head())
